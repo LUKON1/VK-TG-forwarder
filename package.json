@@ -1,0 +1,19 @@
+{
+  "name": "vk-tg-forwarder",
+  "version": "1.0.0",
+  "description": "Forwards messages and photos from a VK group chat to a Telegram group via VK User Long Poll API",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "grammy": "^1.36.1",
+    "vk-io": "^4.10.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
