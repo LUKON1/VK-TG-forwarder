@@ -13,7 +13,14 @@ export const vk = new VK({ token: VK_COMMUNITY_TOKEN });
 // Start Bots Long Poll and register a handler filtered by peer_id
 // vk.updates.start() auto-detects group_id and switches to Bots Long Poll API
 export async function onMessage(peerId, handler) {
+  // Log incoming peer_ids for the first 5 messages to help identify VK_PEER_ID
+  let logCount = 0;
+
   vk.updates.on("message_new", (ctx) => {
+    if (logCount < 5) {
+      console.log(`[peer] incoming=${ctx.peerId} expected=${peerId} match=${ctx.peerId === peerId}`);
+      logCount++;
+    }
     if (ctx.peerId !== peerId) return;
     handler(ctx);
   });
