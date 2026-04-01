@@ -1,8 +1,6 @@
 import { vk } from "./vkClient.js";
 import { sendText, sendPhoto, sendMediaGroup } from "./tgClient.js";
 
-const { TG_CHAT_ID } = process.env;
-
 // Pick the largest size URL from a VK photo attachment
 // In Bots Long Poll, data is in attachment.payload; User Long Poll uses attachment.photo
 function getPhotoUrl(attachment) {
@@ -30,8 +28,8 @@ async function resolveName(senderId) {
   }
 }
 
-export async function forward(ctx) {
-  const chatId = Number(TG_CHAT_ID);
+// tgChatId is passed from the router (vkClient) — no longer read from env
+export async function forward(ctx, tgChatId) {
   const name = await resolveName(ctx.senderId);
   const prefix = `[${name}]`;
   const text = ctx.text ?? "";
@@ -44,14 +42,14 @@ export async function forward(ctx) {
     .filter(Boolean);
 
   if (photoUrls.length === 0) {
-    if (text) await sendText(chatId, caption);
+    if (text) await sendText(tgChatId, caption);
     return;
   }
 
   if (photoUrls.length === 1) {
-    await sendPhoto(chatId, photoUrls[0], caption);
+    await sendPhoto(tgChatId, photoUrls[0], caption);
     return;
   }
 
-  await sendMediaGroup(chatId, photoUrls, caption);
+  await sendMediaGroup(tgChatId, photoUrls, caption);
 }
