@@ -1,5 +1,4 @@
 import { VK } from "vk-io";
-import { getProxyAgent } from "./proxy.js";
 
 const { VK_COMMUNITY_TOKEN } = process.env;
 
@@ -8,13 +7,9 @@ if (!VK_COMMUNITY_TOKEN) {
   process.exit(1);
 }
 
-const agent = getProxyAgent();
-
 // Shared VK instance using community token — no expiry, no refresh needed
-export const vk = new VK({
-  token: VK_COMMUNITY_TOKEN,
-  ...(agent ? { agent } : {})
-});
+// We connect to VK directly, as VPS datacenters are often blocked by VK API with SSL alerts.
+export const vk = new VK({ token: VK_COMMUNITY_TOKEN });
 
 // Start Bots Long Poll, route incoming messages to handler by peer_id
 // vk.updates.start() auto-detects group_id and switches to Bots Long Poll API
