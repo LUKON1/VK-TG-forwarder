@@ -1,4 +1,5 @@
 import { Bot, InputMediaBuilder } from "grammy";
+import { getProxyAgent } from "./proxy.js";
 
 const { TG_BOT_TOKEN } = process.env;
 
@@ -7,7 +8,9 @@ if (!TG_BOT_TOKEN) {
   process.exit(1);
 }
 
-const bot = new Bot(TG_BOT_TOKEN);
+const agent = getProxyAgent();
+const botConfig = agent ? { client: { baseFetchConfig: { agent } } } : {};
+const bot = new Bot(TG_BOT_TOKEN, botConfig);
 
 export function sendText(chatId, text) {
   return bot.api.sendMessage(chatId, text);
