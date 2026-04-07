@@ -8,7 +8,7 @@ if (!TG_BOT_TOKEN) {
   process.exit(1);
 }
 
-const agent = getProxyAgent();
+const agent = getProxyAgent("api.telegram.org");
 const botConfig = agent ? { client: { baseFetchConfig: { agent } } } : {};
 const bot = new Bot(TG_BOT_TOKEN, botConfig);
 
