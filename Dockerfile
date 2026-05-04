@@ -1,15 +1,13 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN apk update && apk upgrade --no-cache && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /app
 
-# Install dependencies first (layer cache)
 COPY package.json ./
-RUN npm install --omit=dev
+RUN npm install --omit=dev && npm cache clean --force
 
-# Copy source
 COPY src/ ./src/
 
 USER appuser
